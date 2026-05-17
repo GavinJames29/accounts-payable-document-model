@@ -1,5 +1,78 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "InvoiceExtraction",
-  "type": "object"
+  "$id": "https://example.com/schemas/invoice_extraction.schema.json",
+  "title": "Invoice/PO/Receipt Extraction Record",
+  "description": "Single JSONL record for invoice extraction and three-way matching.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "input", "target"],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invoice_text", "po_text", "receipt_text"],
+      "properties": {
+        "invoice_text": { "type": "string" },
+        "po_text": { "type": "string" },
+        "receipt_text": { "type": "string" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vendor_name",
+        "invoice_number",
+        "po_number",
+        "invoice_date",
+        "due_date",
+        "currency",
+        "subtotal",
+        "tax",
+        "total",
+        "payment_terms",
+        "line_items",
+        "total_mismatch",
+        "po_mismatch",
+        "receipt_mismatch",
+        "missing_fields"
+      ],
+      "properties": {
+        "vendor_name": { "type": "string" },
+        "invoice_number": { "type": "string" },
+        "po_number": { "type": ["string", "null"] },
+        "invoice_date": { "type": "string" },
+        "due_date": { "type": ["string", "null"] },
+        "currency": { "type": "string" },
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "total": { "type": "number" },
+        "payment_terms": { "type": ["string", "null"] },
+        "line_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["description", "quantity", "unit_price", "line_total"],
+            "properties": {
+              "description": { "type": "string" },
+              "quantity": { "type": "number" },
+              "unit_price": { "type": "number" },
+              "line_total": { "type": "number" }
+            }
+          }
+        },
+        "total_mismatch": { "type": "boolean" },
+        "po_mismatch": { "type": "boolean" },
+        "receipt_mismatch": { "type": "boolean" },
+        "missing_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
 }
